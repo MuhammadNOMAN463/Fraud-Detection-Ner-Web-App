@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fraud Detection NER</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    .entity { background: #ffd; padding: 5px; margin: 5px 0; border-left: 4px solid #ffc107; }
+  </style>
+</head>
+<body>
+  <h1>🕵️ Fraud Detection NER</h1>
+  <textarea id="inputText" rows="6" cols="60" placeholder="Paste suspicious text here..."></textarea><br><br>
+  <button onclick="detectEntities()">Detect Entities</button>
+  <div id="results"></div>
+
+  <script>
+    async function detectEntities() {
+      const text = document.getElementById("inputText").value;
+      const res = await fetch("/api/ner", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+      const data = await res.json();
+      const results = document.getElementById("results");
+      results.innerHTML = "<h3>Detected Entities:</h3>";
+      data.entities.forEach(e => {
+        results.innerHTML += `<div class="entity"><strong>${e.label}:</strong> ${e.text}</div>`;
+      });
+    }
+  </script>
+</body>
+</html>
